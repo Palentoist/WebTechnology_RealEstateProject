@@ -12,32 +12,41 @@
 
     <div class="card">
         <h2>Bookings for this Unit</h2>
-        <a href="{{ route('bookings.create') }}" class="btn btn-primary">New Booking</a>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Plan</th>
-                <th>Booking Date</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            @forelse($unit->bookings as $booking)
-                <tr>
-                    <td>{{ $booking->id }}</td>
-                    <td>{{ optional($booking->user)->name }}</td>
-                    <td>{{ optional($booking->installmentPlan)->plan_name }}</td>
-                    <td>{{ $booking->booking_date }}</td>
-                    <td>{{ $booking->status }}</td>
-                </tr>
-            @empty
-                <tr><td colspan="5">No bookings yet.</td></tr>
-            @endforelse
-            </tbody>
-        </table>
+        @if(Auth::user()->role === 'admin')
+            <a href="{{ route('bookings.create') }}" class="btn btn-primary">New Booking</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Plan</th>
+                        <th>Booking Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($unit->bookings as $booking)
+                        <tr>
+                            <td>{{ $booking->id }}</td>
+                            <td>{{ optional($booking->user)->name }}</td>
+                            <td>{{ optional($booking->installmentPlan)->plan_name }}</td>
+                            <td>{{ $booking->booking_date }}</td>
+                            <td>{{ $booking->status }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">No bookings yet.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        @else
+            <!-- Customer View -->
+            @if(strtolower($unit->status) === 'available')
+                <a href="{{ route('bookings.create', ['unit_id' => $unit->id]) }}" class="btn btn-primary">Book Now</a>
+            @else
+                <p>This unit is currently {{ $unit->status }}</p>
+            @endif
+        @endif
     </div>
 @endsection
-
-

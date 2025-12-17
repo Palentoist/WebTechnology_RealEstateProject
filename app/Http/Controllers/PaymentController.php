@@ -12,7 +12,16 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::with(['installmentItem.schedule.booking.user', 'receivedBy'])->latest()->paginate(10);
+        $query = Payment::with(['installmentItem.schedule.booking.user', 'receivedBy']);
+
+        if (Auth::user()->role !== 'admin') {
+            // Filter payments related to user's bookings
+            $query->whereHas('installmentItem.schedule.booking', function ($q) {
+                $q->where('user_id', Auth::id());
+            });
+        }
+
+        $payments = $query->latest()->paginate(10);
 
         return view('payments.index', compact('payments'));
     }
@@ -62,7 +71,7 @@ class PaymentController extends Controller
             'user_id' => Auth::id(),
             'action' => 'payment_created',
             'title' => 'Payment recorded',
-            'details' => 'Payment of '.$payment->amount.' for installment #'.$installmentItem->installment_number.' (booking #'.optional($installmentItem->schedule->booking)->id.')',
+            'details' => 'Payment of ' . $payment->amount . ' for installment #' . $installmentItem->installment_number . ' (booking #' . optional($installmentItem->schedule->booking)->id . ')',
         ]);
 
         return redirect()->route('payments.show', $payment)->with('status', 'Payment recorded successfully.');
@@ -70,6 +79,12 @@ class PaymentController extends Controller
 
     public function show(Payment $payment)
     {
+        if (Auth::user()->role !== 'admin') {
+            $payment->load('installmentItem.schedule.booking');
+            if ($payment->installmentItem->schedule->booking->user_id !== Auth::id()) {
+                abort(403);
+            }
+        }
         $payment->load('installmentItem.schedule.booking.user', 'receivedBy');
 
         return view('payments.show', compact('payment'));

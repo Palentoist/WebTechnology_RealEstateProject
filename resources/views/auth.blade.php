@@ -625,7 +625,7 @@
                     <label>Email</label>
                     <i class="fa-solid fa-envelope"></i>
                     @error('email')
-                    <div class="error-message">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -634,7 +634,7 @@
                     <label>Password</label>
                     <i class="fa-solid fa-lock"></i>
                     @error('password')
-                    <div class="error-message">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -662,7 +662,7 @@
                     <label>Username</label>
                     <i class="fa-solid fa-user"></i>
                     @error('name')
-                    <div class="error-message">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -671,7 +671,7 @@
                     <label>Email</label>
                     <i class="fa-solid fa-envelope"></i>
                     @error('email')
-                    <div class="error-message">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -680,8 +680,19 @@
                     <label>Password</label>
                     <i class="fa-solid fa-lock"></i>
                     @error('password')
-                    <div class="error-message">{{ $message }}</div>
+                        <div class="error-message">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="field-wrapper slide-element">
+                    <select name="role" required
+                        style="width:100%;height:100%;background:transparent;border:none;border-bottom:2px solid #fff;color:#fff;outline:none;">
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="customer" style="color:#000;">Customer</option>
+                        <option value="admin" style="color:#000;">Admin</option>
+                    </select>
+                    <!-- <label style="top:-5px;color:#00d4ff;">Role</label> -->
+                    <i class="fa-solid fa-users-cog"></i>
                 </div>
 
                 <div class="field-wrapper slide-element">

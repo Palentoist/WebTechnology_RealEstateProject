@@ -6,12 +6,20 @@ use App\Models\Project;
 use App\Models\Unit;
 use App\Models\UnitCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UnitController extends Controller
 {
     public function index()
     {
-        $units = Unit::with(['project', 'category'])->latest()->paginate(10);
+        $query = Unit::with(['project', 'category']);
+
+        // If we want customers to only see available units:
+        if (Auth::check() && Auth::user()->role !== 'admin') {
+            $query->where('status', 'Available');
+        }
+
+        $units = $query->latest()->paginate(10);
 
         return view('units.index', compact('units'));
     }

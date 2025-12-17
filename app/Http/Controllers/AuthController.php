@@ -15,7 +15,10 @@ class AuthController extends Controller
     public function showAuth()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('dashboard');
+            }
+            return redirect()->route('customer.dashboard');
         }
         return view('auth');
     }
@@ -34,11 +37,15 @@ class AuthController extends Controller
             ActivityLog::create([
                 'user_id' => Auth::id(),
                 'action' => 'login',
-                'title' => 'Admin logged in',
-                'details' => Auth::user()->name.' logged in at '.now()->toDateTimeString(),
+                'title' => 'User logged in',
+                'details' => Auth::user()->name . ' logged in at ' . now()->toDateTimeString(),
             ]);
 
-            return redirect()->intended('dashboard');
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended('dashboard');
+            }
+
+            return redirect()->intended(route('customer.dashboard'));
         }
 
         return back()->withErrors([
@@ -53,6 +60,7 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', Password::min(8)],
+            'role' => ['required', 'in:admin,customer'],
         ]);
 
         $user = User::create([
@@ -61,6 +69,7 @@ class AuthController extends Controller
             // The User model already has a "hashed" cast for password,
             // so we store the plain value here and let Laravel hash it.
             'password' => $validated['password'],
+            'role' => $validated['role'],
         ]);
 
         Auth::login($user);
@@ -69,10 +78,14 @@ class AuthController extends Controller
             'user_id' => $user->id,
             'action' => 'register',
             'title' => 'New user registered',
-            'details' => $user->name.' registered at '.now()->toDateTimeString(),
+            'details' => $user->name . ' registered at ' . now()->toDateTimeString(),
         ]);
 
-        return redirect()->route('dashboard');
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        }
+
+        return redirect()->route('customer.dashboard');
     }
 
     // Handle logout

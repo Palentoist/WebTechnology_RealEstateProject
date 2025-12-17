@@ -17,7 +17,13 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with(['user', 'unit.project', 'installmentPlan'])->latest()->paginate(10);
+        $query = Booking::with(['user', 'unit.project', 'installmentPlan']);
+
+        if (Auth::user()->role !== 'admin') {
+            $query->where('user_id', Auth::id());
+        }
+
+        $bookings = $query->latest()->paginate(10);
 
         return view('bookings.index', compact('bookings'));
     }
@@ -40,6 +46,15 @@ class BookingController extends Controller
             'booking_date' => ['required', 'date'],
             'status' => ['required', Rule::in(['pending', 'booked', 'confirmed', 'cancelled'])],
         ]);
+
+        if (Auth::user()->role !== 'admin') {
+            $validated['user_id'] = Auth::id();
+            // Customers typically can only request 'pending' or 'booked' depending on business logic
+            // For now we trust the form or set default?
+            // Let's force status to 'pending' for customers if verification is needed, 
+            // but prompt said "Purchase made is then verified by that admin".
+            $validated['status'] = 'pending'; 
+        }
 
         $unit = Unit::findOrFail($validated['unit_id']);
         $plan = InstallmentPlan::findOrFail($validated['plan_id']);

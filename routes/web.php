@@ -15,17 +15,42 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
+// Admin Exclusive Routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // Core resources based on the ERD
     Route::resource('projects', ProjectController::class)->except(['edit', 'update', 'destroy']);
     Route::resource('unit-categories', UnitCategoryController::class)->except(['edit', 'update', 'destroy']);
-    Route::resource('units', UnitController::class)->except(['edit', 'update', 'destroy']);
     Route::resource('installment-plans', InstallmentPlanController::class)->except(['edit', 'update', 'destroy']);
+
+    // Admin-only Write Actions for shared resources
+    // MUST come before wildcard resources
+    Route::get('units/create', [UnitController::class, 'create'])->name('units.create');
+    Route::post('units', [UnitController::class, 'store'])->name('units.store');
+
+    Route::get('payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');
+
+    Route::get('reminders/create', [ReminderController::class, 'create'])->name('reminders.create');
+    Route::post('reminders', [ReminderController::class, 'store'])->name('reminders.store');
+});
+
+// Shared Routes (Accessible by both Admin and Customer)
+Route::middleware('auth')->group(function () {
+    // Bookings: Both can list (filtered) and create (logic handled in controller)
     Route::resource('bookings', BookingController::class)->except(['edit', 'update', 'destroy']);
-    Route::resource('payments', PaymentController::class)->only(['index', 'create', 'store', 'show']);
-    Route::resource('reminders', ReminderController::class)->only(['index', 'create', 'store', 'show']);
+
+    // Read-only access for both (Admin has extra write access defined above)
+    Route::resource('units', UnitController::class)->only(['index', 'show']);
+    Route::resource('payments', PaymentController::class)->only(['index', 'show']);
+    Route::resource('reminders', ReminderController::class)->only(['index', 'show']);
+});
+
+// Customer Exclusive Routes
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/customer/dashboard', function () {
+        return view('customer-dashboard');
+    })->name('customer.dashboard');
 });
