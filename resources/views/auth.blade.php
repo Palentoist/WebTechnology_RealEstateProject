@@ -700,7 +700,7 @@
 
     </div>
     <div class="footer">
-        <p>© All Rights Reserved <a href="#" target="_blank">@Akatsuki</a></p>
+        <p>© All Rights Reserved <a href="#" target="_blank">@Shawaiz</a></p>
     </div>
 
     <script>
