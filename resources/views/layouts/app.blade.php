@@ -216,15 +216,23 @@
             box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
         }
 
-        .notif-dot {
+        .notif-badge {
             position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
+            top: -4px;
+            right: -4px;
+            min-width: 18px;
+            height: 18px;
             border-radius: 999px;
-            background: #22c55e;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.8), 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--bg);
         }
 
         .notif-panel {
@@ -278,6 +286,12 @@
         .notif-item {
             padding: 8px 6px 8px;
             border-bottom: 1px dashed rgba(31, 41, 55, 0.8);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .notif-item:hover {
+            background: rgba(56, 189, 248, 0.08);
         }
 
         .notif-item-title {
@@ -544,12 +558,12 @@
                     </li>
 
                     @if(Auth::user()->role !== 'admin')
-                    <li class="nav-item">
-                        <a href="{{ route('bookings.index') }}">
-                            <span class="nav-item-icon">📝</span>
-                            <span>Bookings</span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ route('bookings.index') }}">
+                                <span class="nav-item-icon">📝</span>
+                                <span>Bookings</span>
+                            </a>
+                        </li>
                     @endif
 
                     @if(Auth::user()->role === 'admin')
@@ -562,12 +576,12 @@
                     @endif
 
                     @if(Auth::user()->role !== 'admin')
-                    <li class="nav-item">
-                        <a href="{{ route('reminders.index') }}">
-                            <span class="nav-item-icon">⏰</span>
-                            <span>Reminders</span>
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ route('reminders.index') }}">
+                                <span class="nav-item-icon">⏰</span>
+                                <span>Reminders</span>
+                            </a>
+                        </li>
                     @endif
                 </ul>
             </div>
@@ -597,8 +611,11 @@
                         <button type="button" id="notifToggle" class="notif-button" aria-label="Notifications">
                             🔔
                         </button>
-                        @if(\App\Models\ActivityLog::count() > 0)
-                            <span class="notif-dot"></span>
+                        @php
+                            $unreadCount = \App\Models\ActivityLog::unread()->count();
+                        @endphp
+                        @if($unreadCount > 0)
+                            <span class="notif-badge" id="notifBadge">{{ $unreadCount }}</span>
                         @endif
                     </div>
                     <div class="pill">
@@ -618,7 +635,7 @@
 
     @auth
         @php
-            $activityLogs = \App\Models\ActivityLog::with('user')->latest()->limit(20)->get();
+            $activityLogs = \App\Models\ActivityLog::unread()->with('user')->latest()->limit(20)->get();
         @endphp
         <aside id="notifPanel" class="notif-panel">
             <div class="notif-panel-header">
@@ -630,7 +647,7 @@
             </div>
             <ul class="notif-list">
                 @forelse($activityLogs as $log)
-                    <li class="notif-item">
+                    <li class="notif-item" data-notification-id="{{ $log->id }}">
                         <div class="notif-item-title">{{ $log->title }}</div>
                         <div class="notif-item-meta">
                             @if($log->user)
@@ -650,11 +667,101 @@
             </ul>
         </aside>
 
-        <script>         (function () {             const toggle = document.getElementById('notifToggle');             const panel = document.getElementById('notifPanel');             const closeBtn = panel ? panel.querySelector('.notif-panel-close') : null;
-                 function openPanel() {                 if (panel) {                     panel.classList.add('notif-panel--open');                 }             }
-                 function closePanel() {                 if (panel) {                     panel.classList.remove('notif-panel--open');                 }             }
-                 if (toggle && panel) {                 toggle.addEventListener('click', function () {                     if (panel.classList.contains('notif-panel--open')) {                         closePanel();                     } else {                         openPanel();                     }                 });             }
-                 if (closeBtn) {                 closeBtn.addEventListener('click', closePanel);             }         })();
+        <script>
+            (function () {
+                const toggle = document.getElementById('notifToggle');
+                const panel = document.getElementById('notifPanel');
+                const closeBtn = panel ? panel.querySelector('.notif-panel-close') : null;
+                const badge = document.getElementById('notifBadge');
+
+                function openPanel() {
+                    if (panel) {
+                        panel.classList.add('notif-panel--open');
+                    }
+                }
+
+                function closePanel() {
+                    if (panel) {
+                        panel.classList.remove('notif-panel--open');
+                    }
+                }
+
+                function updateBadge(count) {
+                    if (count > 0) {
+                        if (badge) {
+                            badge.textContent = count;
+                        } else {
+                            // Create badge if it doesn't exist
+                            const newBadge = document.createElement('span');
+                            newBadge.className = 'notif-badge';
+                            newBadge.id = 'notifBadge';
+                            newBadge.textContent = count;
+                            toggle.parentElement.appendChild(newBadge);
+                        }
+                    } else {
+                        // Remove badge if count is 0
+                        if (badge) {
+                            badge.remove();
+                        }
+                    }
+                }
+
+                function markAsRead(notificationId, itemElement) {
+                    fetch(`/notifications/${notificationId}/mark-as-read`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Remove the notification item from the list
+                                itemElement.style.opacity = '0';
+                                setTimeout(() => {
+                                    itemElement.remove();
+                                    // Check if there are no more notifications
+                                    const remainingItems = panel.querySelectorAll('.notif-item');
+                                    if (remainingItems.length === 0) {
+                                        const notifList = panel.querySelector('.notif-list');
+                                        notifList.innerHTML = '<li class="notif-item"><div class="notif-item-meta">No unread notifications.</div></li>';
+                                    }
+                                }, 200);
+
+                                // Update badge count
+                                updateBadge(data.unread_count);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error marking notification as read:', error);
+                        });
+                }
+
+                if (toggle && panel) {
+                    toggle.addEventListener('click', function () {
+                        if (panel.classList.contains('notif-panel--open')) {
+                            closePanel();
+                        } else {
+                            openPanel();
+                        }
+                    });
+                }
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closePanel);
+                }
+
+                // Add click handlers to notification items
+                if (panel) {
+                    panel.addEventListener('click', function (e) {
+                        const notifItem = e.target.closest('.notif-item');
+                        if (notifItem && notifItem.dataset.notificationId) {
+                            markAsRead(notifItem.dataset.notificationId, notifItem);
+                        }
+                    });
+                }
+            })();
         </script>
     @endauth
 </body>

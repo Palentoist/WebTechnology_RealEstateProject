@@ -14,11 +14,31 @@ class ActivityLog extends Model
         'action',
         'title',
         'details',
+        'read_at',
+        'read_by',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function readBy()
+    {
+        return $this->belongsTo(User::class, 'read_by');
+    }
+
+    public function scopeUnread($query)
+    {
+        return $query->whereNull('read_at');
+    }
+
+    public function markAsRead($userId)
+    {
+        $this->update([
+            'read_at' => now(),
+            'read_by' => $userId,
+        ]);
     }
 }
 
