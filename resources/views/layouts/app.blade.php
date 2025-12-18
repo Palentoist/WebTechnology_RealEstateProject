@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +49,7 @@
         }
 
         .shell-sidebar {
-            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
+            background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.98));
             border-right: 1px solid rgba(148, 163, 184, 0.18);
             padding: 20px 18px;
             display: flex;
@@ -101,7 +100,7 @@
             gap: 4px;
         }
 
-        .nav-item>a {
+        .nav-item > a {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -111,7 +110,7 @@
             font-size: 13px;
         }
 
-        .nav-item>a:hover {
+        .nav-item > a:hover {
             background: rgba(15, 23, 42, 0.9);
             color: var(--text-main);
         }
@@ -123,7 +122,7 @@
             color: var(--accent);
         }
 
-        .nav-item--primary>a {
+        .nav-item--primary > a {
             background: linear-gradient(90deg, rgba(56, 189, 248, 0.14), transparent);
             color: var(--text-main);
         }
@@ -171,7 +170,7 @@
             padding: 16px 30px;
             border-bottom: 1px solid rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(24px);
-            background: linear-gradient(to right, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.7));
+            background: linear-gradient(to right, rgba(15,23,42,0.82), rgba(15,23,42,0.7));
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -206,14 +205,14 @@
             width: 32px;
             height: 32px;
             border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            background: radial-gradient(circle at 30% 0%, rgba(56, 189, 248, 0.9), rgba(15, 23, 42, 0.95));
+            border: 1px solid rgba(148,163,184,0.5);
+            background: radial-gradient(circle at 30% 0%, rgba(56,189,248,0.9), rgba(15,23,42,0.95));
             display: flex;
             align-items: center;
             justify-content: center;
             color: #e5faff;
             cursor: pointer;
-            box-shadow: 0 0 18px rgba(56, 189, 248, 0.8);
+            box-shadow: 0 0 18px rgba(56,189,248,0.8);
         }
 
         .notif-dot {
@@ -224,7 +223,7 @@
             height: 8px;
             border-radius: 999px;
             background: #22c55e;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+            box-shadow: 0 0 10px rgba(34,197,94,0.9);
         }
 
         .notif-panel {
@@ -233,9 +232,9 @@
             right: -320px;
             width: 300px;
             height: 100vh;
-            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 60%), #020617;
-            border-left: 1px solid rgba(148, 163, 184, 0.25);
-            box-shadow: -24px 0 60px rgba(15, 23, 42, 0.95);
+            background: radial-gradient(circle at top, rgba(56,189,248,0.25), transparent 60%), #020617;
+            border-left: 1px solid rgba(148,163,184,0.25);
+            box-shadow: -24px 0 60px rgba(15,23,42,0.95);
             padding: 16px 14px 14px;
             transition: right 0.25s ease-in-out;
             z-index: 40;
@@ -277,7 +276,7 @@
 
         .notif-item {
             padding: 8px 6px 8px;
-            border-bottom: 1px dashed rgba(31, 41, 55, 0.8);
+            border-bottom: 1px dashed rgba(31,41,55,0.8);
         }
 
         .notif-item-title {
@@ -296,9 +295,9 @@
 
         /* Generic components used by pages */
         .card {
-            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 55%),
-                radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.4), transparent 60%),
-                var(--bg-card);
+            background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 55%),
+                        radial-gradient(circle at bottom right, rgba(30,64,175,0.4), transparent 60%),
+                        var(--bg-card);
             border-radius: 16px;
             border: 1px solid rgba(148, 163, 184, 0.14);
             padding: 18px 18px 16px;
@@ -328,7 +327,7 @@
             padding: 12px 12px 10px;
             border-radius: 12px;
             border: 1px solid rgba(148, 163, 184, 0.2);
-            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.14), transparent 60%);
+            background: radial-gradient(circle at top, rgba(56,189,248,0.14), transparent 60%);
         }
 
         .metric-label {
@@ -357,8 +356,7 @@
             font-size: 13px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 7px 9px;
             border-bottom: 1px solid rgba(31, 41, 55, 0.9);
         }
@@ -369,7 +367,7 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: var(--text-muted);
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15,23,42,0.9);
         }
 
         tr:hover td {
@@ -397,7 +395,7 @@
             box-shadow: 0 12px 30px rgba(8, 47, 73, 0.8);
         }
 
-        .btn+.btn {
+        .btn + .btn {
             margin-left: 6px;
         }
 
@@ -468,7 +466,7 @@
                 display: none;
             }
 
-            .nav-item>a {
+            .nav-item > a {
                 justify-content: center;
             }
 
@@ -482,7 +480,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="shell">
         <aside class="shell-sidebar">
@@ -498,8 +495,7 @@
                 <div class="nav-section-title">Overview</div>
                 <ul class="nav-list">
                     <li class="nav-item nav-item--primary">
-                        <a
-                            href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('customer.dashboard') }}">
+                        <a href="{{ route('dashboard') }}">
                             <span class="nav-item-icon">🏠</span>
                             <span>Dashboard</span>
                         </a>
@@ -510,65 +506,48 @@
             <div>
                 <div class="nav-section-title">Management</div>
                 <ul class="nav-list">
-                    @if(Auth::user()->role === 'admin')
-                        <li class="nav-item">
-                            <a href="{{ route('projects.index') }}">
-                                <span class="nav-item-icon">📁</span>
-                                <span>Projects</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('unit-categories.index') }}">
-                                <span class="nav-item-icon">🏷️</span>
-                                <span>Unit Categories</span>
-                            </a>
-                        </li>
-                    @endif
-
-
-
-                    @if(Auth::user()->role === 'admin')
-                        <li class="nav-item">
-                            <a href="{{ route('installment-plans.index') }}">
-                                <span class="nav-item-icon">📊</span>
-                                <span>Installment Plans</span>
-                            </a>
-                        </li>
-                    @endif
-
+                    <li class="nav-item">
+                        <a href="{{ route('projects.index') }}">
+                            <span class="nav-item-icon">📁</span>
+                            <span>Projects</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('unit-categories.index') }}">
+                            <span class="nav-item-icon">🏷️</span>
+                            <span>Unit Categories</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ route('units.index') }}">
                             <span class="nav-item-icon">🏢</span>
-                            <span>{{ Auth::user()->role === 'admin' ? 'Units' : 'Listings' }}</span>
+                            <span>Units</span>
                         </a>
                     </li>
-
-                    @if(Auth::user()->role !== 'admin')
+                    <li class="nav-item">
+                        <a href="{{ route('installment-plans.index') }}">
+                            <span class="nav-item-icon">📊</span>
+                            <span>Installment Plans</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ route('bookings.index') }}">
                             <span class="nav-item-icon">📝</span>
                             <span>Bookings</span>
                         </a>
                     </li>
-                    @endif
-
-                    @if(Auth::user()->role === 'admin')
-                        <li class="nav-item">
-                            <a href="{{ route('payments.index') }}">
-                                <span class="nav-item-icon">💳</span>
-                                <span>Payments</span>
-                            </a>
-                        </li>
-                    @endif
-
-                    @if(Auth::user()->role !== 'admin')
+                    <li class="nav-item">
+                        <a href="{{ route('payments.index') }}">
+                            <span class="nav-item-icon">💳</span>
+                            <span>Payments</span>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ route('reminders.index') }}">
                             <span class="nav-item-icon">⏰</span>
                             <span>Reminders</span>
                         </a>
                     </li>
-                    @endif
                 </ul>
             </div>
 
@@ -589,8 +568,7 @@
             <header class="shell-main-header">
                 <div>
                     <div class="shell-main-header-title">{{ $title ?? 'Dashboard' }}</div>
-                    <div class="shell-main-header-subtitle">Control panel for projects, bookings, payments and
-                        schedules.</div>
+                    <div class="shell-main-header-subtitle">Control panel for projects, bookings, payments and schedules.</div>
                 </div>
                 <div class="shell-main-header-right">
                     <div style="position: relative;">
@@ -650,13 +628,41 @@
             </ul>
         </aside>
 
-        <script>         (function () {             const toggle = document.getElementById('notifToggle');             const panel = document.getElementById('notifPanel');             const closeBtn = panel ? panel.querySelector('.notif-panel-close') : null;
-                 function openPanel() {                 if (panel) {                     panel.classList.add('notif-panel--open');                 }             }
-                 function closePanel() {                 if (panel) {                     panel.classList.remove('notif-panel--open');                 }             }
-                 if (toggle && panel) {                 toggle.addEventListener('click', function () {                     if (panel.classList.contains('notif-panel--open')) {                         closePanel();                     } else {                         openPanel();                     }                 });             }
-                 if (closeBtn) {                 closeBtn.addEventListener('click', closePanel);             }         })();
+        <script>
+            (function () {
+                const toggle = document.getElementById('notifToggle');
+                const panel = document.getElementById('notifPanel');
+                const closeBtn = panel ? panel.querySelector('.notif-panel-close') : null;
+
+                function openPanel() {
+                    if (panel) {
+                        panel.classList.add('notif-panel--open');
+                    }
+                }
+
+                function closePanel() {
+                    if (panel) {
+                        panel.classList.remove('notif-panel--open');
+                    }
+                }
+
+                if (toggle && panel) {
+                    toggle.addEventListener('click', function () {
+                        if (panel.classList.contains('notif-panel--open')) {
+                            closePanel();
+                        } else {
+                            openPanel();
+                        }
+                    });
+                }
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closePanel);
+                }
+            })();
         </script>
     @endauth
 </body>
-
 </html>
+
+

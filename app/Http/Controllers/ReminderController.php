@@ -6,21 +6,14 @@ use App\Models\InstallmentItem;
 use App\Models\Reminder;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReminderController extends Controller
 {
     public function index()
     {
-        $query = Reminder::with('installmentItem.schedule.booking.user');
-
-        if (Auth::user()->role !== 'admin') {
-            $query->whereHas('installmentItem.schedule.booking', function ($q) {
-                $q->where('user_id', Auth::id());
-            });
-        }
-
-        $reminders = $query->latest()->paginate(10);
+        $reminders = Reminder::with('installmentItem.schedule.booking.user')
+            ->latest()
+            ->paginate(10);
 
         return view('reminders.index', compact('reminders'));
     }
@@ -58,7 +51,7 @@ class ReminderController extends Controller
             'user_id' => optional(optional($reminder->installmentItem->schedule)->booking)->user_id,
             'action' => 'reminder_created',
             'title' => 'Reminder created',
-            'details' => 'Reminder for installment #' . optional($reminder->installmentItem)->installment_number . ' on ' . $reminder->reminder_date,
+            'details' => 'Reminder for installment #'.optional($reminder->installmentItem)->installment_number.' on '.$reminder->reminder_date,
         ]);
 
         return redirect()->route('reminders.show', $reminder)->with('status', 'Reminder created (no email/SMS sending implemented).');
@@ -66,12 +59,6 @@ class ReminderController extends Controller
 
     public function show(Reminder $reminder)
     {
-        if (Auth::user()->role !== 'admin') {
-            $reminder->load('installmentItem.schedule.booking');
-            if ($reminder->installmentItem->schedule->booking->user_id !== Auth::id()) {
-                abort(403);
-            }
-        }
         $reminder->load('installmentItem.schedule.booking.user');
 
         return view('reminders.show', compact('reminder'));
